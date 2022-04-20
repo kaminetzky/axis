@@ -1,9 +1,9 @@
-from xml.sax.saxutils import prepare_input_source
 import cv2
 import numpy as np
 
 
 def overlay_grayscale(bg, fg, pos, b=0, c=255):
+  # source: https://github.com/computervision-xray-testing/pyxvis
   # bg (background) and fg (foreground) must be numpy ndarrays with uint8
   # values between 0 and 255
   # pos is (y, x) with respect to the top-left corner
@@ -29,28 +29,29 @@ def overlay_grayscale(bg, fg, pos, b=0, c=255):
   return result
 
 
-def overlay_color(target, source, pos, alpha=0.9):
+def overlay_color(bg, fg, pos, alpha=0.9):
   # source: http://arxiv.org/abs/1909.11508
   # pos is the top left corner
-  target_gray = rgb_to_gray(target)
-  target_mask = calculate_bag_mask(target)
-  threat_threshold = calculate_threat_threshold(target_gray, target_mask)
+  bg_gray = rgb_to_gray(bg)
+  bg_mask = calculate_bag_mask(bg)
+  threat_threshold = calculate_threat_threshold(bg_gray, bg_mask)
 
-  target_size = target.shape[:2]
+  bg_size = bg.shape[:2]
 
-  source_mask = binarize(source, threat_threshold)
-  source_mask_padded = zero_pad_image(source_mask, target_size, pos)
-  source_mask_padded_inv = 255 - source_mask_padded
+  fg_mask = binarize(fg, threat_threshold)
+  fg_mask_padded = zero_pad_image(fg_mask, bg_size, pos)
+  fg_mask_padded_inv = 255 - fg_mask_padded
 
-  source_padded = zero_pad_image(source, target_size, pos)
-  source_padded_masked = cv2.bitwise_and(source_padded, source_padded, mask=source_mask_padded)
+  fg_padded = zero_pad_image(fg, bg_size, pos)
+  fg_padded_masked = cv2.bitwise_and(fg_padded, fg_padded, mask=fg_mask_padded)
 
-  target_masked = cv2.bitwise_and(target, target, mask=source_mask_padded_inv)
-  target_masked_inv = cv2.bitwise_and(target, target, mask=source_mask_padded)
+  bg_masked = cv2.bitwise_and(bg, bg, mask=fg_mask_padded_inv)
+  bg_masked_inv = cv2.bitwise_and(bg, bg, mask=fg_mask_padded)
 
-  target_source_merged = (alpha * source_padded_masked + (1 - alpha) * target_masked_inv).astype(np.uint8)
+  bg_fg_merged = (alpha * fg_padded_masked
+                  + (1 - alpha) * bg_masked_inv).astype(np.uint8)
 
-  return target_masked + target_source_merged
+  return bg_masked + bg_fg_merged
 
 
 def calculate_threat_threshold(target, mask):
