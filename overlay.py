@@ -1,3 +1,5 @@
+from xml.sax.saxutils import prepare_input_source
+import cv2
 import numpy as np
 
 
@@ -25,3 +27,118 @@ def overlay_grayscale(bg, fg, pos, b=0, c=255):
   )
 
   return result
+
+
+def overlay_color(target, source, pos, alpha=0.9):
+  # source: http://arxiv.org/abs/1909.11508
+  # pos is the top left corner
+  target_gray = rgb_to_gray(target)
+  target_mask = calculate_bag_mask(target)
+  threat_threshold = calculate_threat_threshold(target_gray, target_mask)
+
+  target_size = target.shape[:2]
+
+  source_mask = binarize(source, threat_threshold)
+  source_mask_padded = zero_pad_image(source_mask, target_size, pos)
+  source_mask_padded_inv = 255 - source_mask_padded
+
+  source_padded = zero_pad_image(source, target_size, pos)
+  source_padded_masked = cv2.bitwise_and(source_padded, source_padded, mask=source_mask_padded)
+
+  target_masked = cv2.bitwise_and(target, target, mask=source_mask_padded_inv)
+  target_masked_inv = cv2.bitwise_and(target, target, mask=source_mask_padded)
+
+  target_source_merged = (alpha * source_padded_masked + (1 - alpha) * target_masked_inv).astype(np.uint8)
+
+  return target_masked + target_source_merged
+
+
+def calculate_threat_threshold(target, mask):
+  region_intensity = calculate_normal_average_intensity(target, mask)
+  threshold = int(round(255 * min(np.exp(region_intensity**5) - 0.5, 0.95)))
+  return threshold
+
+
+def calculate_normal_average_intensity(target, mask):
+  target_masked = cv2.bitwise_and(target, target, mask=mask)
+  target_masked_sum = np.sum(target_masked)
+  mask_sum = np.sum(mask)
+  return target_masked_sum / mask_sum
+
+
+def zero_pad_image(img, size, pos):
+  if len(img.shape) == 2:
+    img_padded = np.zeros(size, dtype=np.uint8)
+  else:
+    img_padded = np.zeros((*size, 3), dtype=np.uint8)
+
+  img, size, pos = crop_excess_image(img, size, pos)
+
+  if img.shape[0] == 0 or img.shape[1] == 0:
+    # Foreground image is completely out of frame
+    return img_padded
+
+  img_padded[pos[0]:pos[0]+img.shape[0], pos[1]:pos[1]+img.shape[1]] = img
+
+  return img_padded
+
+
+def crop_excess_image(img, size, pos):
+  if pos[0] < 0:
+    img = img[-pos[0]:, :]
+    pos = (0, pos[1])
+  if pos[1] < 0:
+    img = img[:, -pos[1]:]
+    pos = (pos[0], 0)
+  if pos[0] + img.shape[0] > size[0]:
+    img = img[:size[0] - img.shape[0] - pos[0], :]
+  if pos[1] + img.shape[1] > size[1]:
+    img = img[:, :size[1] - img.shape[1] - pos[1]]
+  
+  return img, size, pos
+
+
+def calculate_bag_mask(img_rgb):
+  img = rgb_to_gray(img_rgb)
+  img = binarize(img, 240)
+  img = dilate(img, 5)
+  img = fill_holes(img)
+  img = erode(img, 5)
+  img = get_largest_region(img)
+  return img
+
+
+def rgb_to_gray(img):
+  return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
+
+def binarize(img, threshold):
+  if len(img.shape) == 3:
+    img = rgb_to_gray(img)
+  return np.where(img < threshold, 255, 0).astype(np.uint8)
+
+
+def dilate(img, kernel_size):
+  kernel = np.ones((kernel_size, kernel_size), dtype=np.uint8)
+  return cv2.dilate(img, kernel, iterations=1)
+
+
+def fill_holes(img):
+  img_filled = np.copy(img)
+  contours, _ = cv2.findContours(img_filled, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+  for contour in contours:
+      cv2.drawContours(img_filled, [contour], 0, 255, -1)
+  return img_filled
+
+
+def erode(img, kernel_size):
+  kernel = np.ones((kernel_size, kernel_size), dtype=np.uint8)
+  return cv2.erode(img, kernel, iterations=1)
+
+
+def get_largest_region(img):
+  contours, _ = cv2.findContours(img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+  largest_contour = sorted(contours, key=cv2.contourArea, reverse=True)[0]
+  img_largest_region = np.zeros(img.shape, dtype=np.uint8)
+  cv2.drawContours(img_largest_region, [largest_contour], 0, 255, -1)
+  return img_largest_region
