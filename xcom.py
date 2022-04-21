@@ -1,5 +1,6 @@
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 import requests
 from tqdm import tqdm
 from urllib import response
@@ -53,8 +54,8 @@ def get_attenuation_ratio(low_energy, high_energy, atomic_number=None,
   attenuations = get_total_attenuation([low_energy, high_energy],
                                        atomic_number,
                                        element_symbol)
-  attenuations_list = list(attenuations.values())
-  return attenuations_list[0] / attenuations_list[1]
+  low_energy_attenuation, high_energy_attenuation = attenuations.values()
+  return low_energy_attenuation / high_energy_attenuation
 
 
 def get_transition_ratios(low_energy, high_energy, inorganic_start=11,
