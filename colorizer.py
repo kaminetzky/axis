@@ -13,9 +13,19 @@ class Colorizer:
   def __init__(self, low_energy=None, high_energy=None, ratios=None):
     # TODO: Add checker that either energies or ratios are defined
     # TODO: Then code the logic.
+
+    if low_energy is None and high_energy is None and ratios is None:
+      raise TypeError('Energies or ratios should be passed')
+    if ratios is None and (low_energy is None or high_energy is None):
+      raise TypeError('Both energies should be passed')
+
     self._low_energy = low_energy
     self._high_energy = high_energy
-    self._ratios = xcom.get_transition_ratios(low_energy, high_energy)
+
+    if ratios:
+      self.ratios = ratios
+    else:
+      self._ratios = xcom.get_transition_ratios(low_energy, high_energy)
 
   @property
   def low_energy(self):
