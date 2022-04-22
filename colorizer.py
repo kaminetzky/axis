@@ -2,6 +2,7 @@
 # TODO: add fallback in case there's no internet connection
 # TODO: check exceptions when the xcom scraper fails to fetch info
 # TODO: add ratios cache
+# TODO: Optimize colorizer. Stop doing it pixelwise
 
 import cv2
 import numpy as np
