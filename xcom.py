@@ -1,3 +1,4 @@
+from functools import lru_cache
 import json
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +14,7 @@ def parse_attenuation_table(attenuations_text):
   return dict(zip(attenuations_keys, attenuations_values))
 
 
+@lru_cache(maxsize=32)
 def get_total_attenuation(energies_kev, atomic_number=None,
                           element_symbol=None):
   if atomic_number is not None and element_symbol is not None:
@@ -51,7 +53,7 @@ def get_total_attenuation(energies_kev, atomic_number=None,
 
 def get_attenuation_ratio(low_energy, high_energy, atomic_number=None,
                           element_symbol=None):
-  attenuations = get_total_attenuation([low_energy, high_energy],
+  attenuations = get_total_attenuation((low_energy, high_energy),
                                        atomic_number,
                                        element_symbol)
   low_energy_attenuation, high_energy_attenuation = attenuations.values()
