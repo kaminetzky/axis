@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import cache
 import json
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,7 +14,7 @@ def parse_attenuation_table(attenuations_text):
   return dict(zip(attenuations_keys, attenuations_values))
 
 
-@lru_cache(maxsize=32)
+@cache
 def get_total_attenuation(energies_kev, atomic_number=None,
                           element_symbol=None):
   if atomic_number is not None and element_symbol is not None:
