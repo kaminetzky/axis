@@ -7,19 +7,14 @@ from colorizer import Colorizer
 
 
 def load_color_backgrounds(dir, extension):
-  # TODO: make sure images are returnes as float32 between 0 and 1
-  # TODO: turn this into a generator
+  # TODO: make sure images are returned as float32 between 0 and 1
 
   filenames = [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
 
-  imgs = []
-  for filename in tqdm(filenames):
+  for filename in filenames:
     img_bgr = cv2.imread(os.path.join(dir, filename), cv2.IMREAD_COLOR)
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-
-    imgs.append(img_rgb)
-    
-  return imgs
+    yield img_rgb
 
 
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
