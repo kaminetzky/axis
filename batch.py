@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 import os
 from tqdm import tqdm
 
@@ -37,6 +38,7 @@ def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
                          cv2.IMREAD_UNCHANGED)
 
     colorizer = Colorizer(low_energy, high_energy)
-    imgs.append(colorizer.colorize(img_low, img_high))
+    img_color = colorizer.colorize(img_low, img_high)
+    imgs.append((img_color * 255).astype(np.uint8))
 
   return imgs
