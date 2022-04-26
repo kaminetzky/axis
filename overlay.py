@@ -100,3 +100,10 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   colissions = np.logical_and(source_mask, np.logical_not(bgnd_mask))
   all_zeros = not colissions.any()
   return all_zeros
+
+
+def scale_rotate_crop_fgnd(img, bgnd, ratio_min, ratio_max):
+  img = image.scale_relative(img, bgnd, ratio_min, ratio_max)
+  img = image.rotate_random(img)
+  img = image.crop_white_borders(img)
+  return img
