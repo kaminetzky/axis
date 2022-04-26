@@ -115,7 +115,7 @@ def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
     overlaid = overlay_color(bgnd, fgnd, insertion_pos)
     bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
-            'shape_y': fgnd.shape[0], 'shape_x': fgnd.shape[1]}
+            'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
     return overlaid, bbox
 
 
