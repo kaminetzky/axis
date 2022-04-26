@@ -10,13 +10,15 @@ from colorizer import Colorizer
 def load_color_backgrounds(dir, extension):
   # TODO: make sure images are returned as float32 between 0 and 1
 
-  filenames = [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
+  filenames = get_filenames(dir, extension)
 
   for filename in filenames:
     img_bgr = cv2.imread(os.path.join(dir, filename), cv2.IMREAD_COLOR)
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
     yield img_rgb
 
+def get_filenames(dir, extension):
+  return [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
 
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
                                high_energy):
