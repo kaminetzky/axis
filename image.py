@@ -72,10 +72,10 @@ def crop_overflowing_image(img, size, pos):
   return img, size, pos
 
 
-def scale_relative(fgnd, bgnd, ratio_min, ratio_max):
+def scale_relative(fgnd, bgnd, scale_min, scale_max):
   height_ratio = fgnd.shape[0] / bgnd.shape[0]
   width_ratio = fgnd.shape[1] / bgnd.shape[1]
-  scale = (np.random.uniform(ratio_min, ratio_max)
+  scale = (np.random.uniform(scale_min, scale_max)
            / max(height_ratio, width_ratio))
   width = int(fgnd.shape[0] * scale)
   height = int(fgnd.shape[1] * scale)
