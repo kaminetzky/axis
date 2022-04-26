@@ -107,3 +107,11 @@ def scale_rotate_crop_fgnd(img, bgnd, ratio_min, ratio_max):
   img = image.rotate_random(img)
   img = image.crop_white_borders(img)
   return img
+
+
+def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
+    fgnd = scale_rotate_crop_fgnd(fgnd, bgnd, scale_min, scale_max)
+    insertion_pos = generate_insertion_pos(bgnd, fgnd)
+    overlaid = overlay_color(bgnd, fgnd, insertion_pos)
+    return overlaid
+  
