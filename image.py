@@ -20,6 +20,8 @@ def dilate(img, kernel_size):
 
 
 def fill_holes(img):
+  # TODO: Only close regions smaller than X so that threat objects are not
+  # overlaid in white spots
   img_filled = np.copy(img)
   contours, _ = cv2.findContours(img_filled, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
   for contour in contours:
