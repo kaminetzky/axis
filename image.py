@@ -44,7 +44,7 @@ def zero_pad_image(img, size, pos):
   else:
     img_padded = np.zeros((*size, 3), dtype=np.uint8)
 
-  img, size, pos = crop_excess_image(img, size, pos)
+  img, size, pos = crop_overflowing_image(img, size, pos)
 
   if img.shape[0] == 0 or img.shape[1] == 0:
     # Foreground image is completely out of frame
@@ -55,7 +55,7 @@ def zero_pad_image(img, size, pos):
   return img_padded
 
 
-def crop_excess_image(img, size, pos):
+def crop_overflowing_image(img, size, pos):
   if pos[0] < 0:
     img = img[-pos[0]:, :]
     pos = (0, pos[1])
