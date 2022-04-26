@@ -1,5 +1,7 @@
 import cv2
+from cv2 import IMWRITE_PNG_COMPRESSION
 import numpy as np
+from scipy import ndimage
 
 
 def rgb_to_gray(img):
@@ -68,3 +70,34 @@ def crop_overflowing_image(img, size, pos):
     img = img[:, :size[1] - img.shape[1] - pos[1]]
   
   return img, size, pos
+
+
+def scale_relative(fgnd, bgnd, ratio_min, ratio_max):
+  height_ratio = fgnd.shape[0] / bgnd.shape[0]
+  width_ratio = fgnd.shape[1] / bgnd.shape[1]
+  scale = (np.random.uniform(ratio_min, ratio_max)
+           / max(height_ratio, width_ratio))
+  width = int(fgnd.shape[0] * scale)
+  height = int(fgnd.shape[1] * scale)
+
+  fgnd_scaled = cv2.resize(fgnd, (width, height), interpolation=cv2.INTER_AREA)
+
+  return fgnd_scaled
+
+
+def rotate_random(img):
+  img_rot = ndimage.rotate(img, np.random.randint(0, 359), order=1,
+                           reshape=True, mode='constant', cval=255)
+  return img_rot
+
+
+def crop_white_borders(img, threshold=250, offset=2):
+  dark_coords = np.where(img < threshold)
+
+  y_start = np.min(dark_coords[0]) - offset
+  y_end = np.max(dark_coords[0]) + offset
+  x_start = np.min(dark_coords[1]) - offset
+  x_end = np.max(dark_coords[1]) + offset
+
+  img_cropped = img[y_start:y_end, x_start:x_end]
+  return img_cropped
