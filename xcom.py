@@ -17,6 +17,7 @@ def parse_attenuation_table(attenuations_text):
 @cache
 def get_total_attenuation(energies_kev, atomic_number=None,
                           element_symbol=None):
+  # TODO: Add file cache
   if atomic_number is not None and element_symbol is not None:
     raise TypeError('atomic_number and element_symbol should not be passed '
                     'together')
