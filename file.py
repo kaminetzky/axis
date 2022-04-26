@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import shutil
 from tqdm import tqdm
 
 from colorizer import Colorizer
@@ -37,3 +38,15 @@ def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
     imgs.append((img_color * 255).astype(np.uint8))
 
   return imgs
+
+
+def delete_and_create_yolo_dirs(data_dir):
+  for category in ['train', 'valid', 'test']:
+    delete_and_create_dir(os.path.join(data_dir, 'images', category))
+    delete_and_create_dir(os.path.join(data_dir, 'labels', category))
+
+
+def delete_and_create_dir(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    os.makedirs(path)
