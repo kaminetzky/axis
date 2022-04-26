@@ -114,7 +114,9 @@ def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     fgnd = scale_rotate_crop_fgnd(fgnd, bgnd, scale_min, scale_max)
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
     overlaid = overlay_color(bgnd, fgnd, insertion_pos)
-    return overlaid
+    bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
+            'shape_y': fgnd.shape[0], 'shape_x': fgnd.shape[1]}
+    return overlaid, bbox
 
 
 def sample_images_with_qty_prob(imgs, qty_prob):
