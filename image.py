@@ -81,8 +81,9 @@ def scale_relative(fgnd, bgnd, scale_min, scale_max):
            / max(height_ratio, width_ratio))
   width = int(fgnd.shape[0] * scale)
   height = int(fgnd.shape[1] * scale)
+  interpolation = cv2.INTER_AREA if scale < 1 else cv2.INTER_CUBIC
 
-  fgnd_scaled = cv2.resize(fgnd, (width, height), interpolation=cv2.INTER_AREA)
+  fgnd_scaled = cv2.resize(fgnd, (width, height), interpolation=interpolation)
 
   return fgnd_scaled
 
