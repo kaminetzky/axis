@@ -23,7 +23,7 @@ def get_filenames(dir, extension):
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
                                high_energy):
   # TODO: test with jpg and png
-  # TODO: make sure images are returnes as float32 between 0 and 1
+  # TODO: make sure images are returned as float32 between 0 and 1
 
   filenames_low = [x for x in os.listdir(dir_low)
                    if x.endswith(f'.{extension}')]
