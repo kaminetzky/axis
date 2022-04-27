@@ -19,12 +19,13 @@ def dilate(img, kernel_size):
   return cv2.dilate(img, kernel, iterations=1)
 
 
-def fill_holes(img):
-  # TODO: Only close regions smaller than X so that threat objects are not
-  # overlaid in white spots
+def fill_holes(img, max_area_percent):
   img_filled = np.copy(img)
-  contours, _ = cv2.findContours(img_filled, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+  max_pixels = max_area_percent * img.shape[0] * img.shape[1] / 100
+  contours, _ = cv2.findContours(img_filled, cv2.RETR_CCOMP,
+                                 cv2.CHAIN_APPROX_SIMPLE)
   for contour in contours:
+    if cv2.contourArea(contour) < max_pixels:
       cv2.drawContours(img_filled, [contour], 0, 255, -1)
   return img_filled
 

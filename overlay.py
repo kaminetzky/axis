@@ -71,11 +71,12 @@ def calculate_normal_average_intensity(target, mask):
   return target_masked_sum / mask_sum
 
 
-def calculate_bag_mask(img_rgb, bin_thresh=240, kernel_size=5):
+def calculate_bag_mask(img_rgb, bin_thresh=240, max_area_percent=0.15,
+                       kernel_size=5):
   img = image.rgb_to_gray(img_rgb)
   img = image.binarize(img, bin_thresh)
   img = image.dilate(img, kernel_size)
-  img = image.fill_holes(img)
+  img = image.fill_holes(img, max_area_percent)
   img = image.erode(img, kernel_size)
   img = image.get_largest_region(img)
   return img
