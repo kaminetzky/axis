@@ -9,6 +9,7 @@ def rgb_to_gray(img):
 
 
 def binarize(img, threshold):
+  # TODO: check if it is worth it to determine the threshold automatically
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
   return np.where(img < threshold, 255, 0).astype(np.uint8)
@@ -20,13 +21,16 @@ def dilate(img, kernel_size):
 
 
 def fill_holes(img, max_area_percent):
-  img_filled = np.copy(img)
   max_pixels = max_area_percent * img.shape[0] * img.shape[1] / 100
+
+  img_filled = np.copy(img)
+
   contours, _ = cv2.findContours(img_filled, cv2.RETR_CCOMP,
                                  cv2.CHAIN_APPROX_SIMPLE)
   for contour in contours:
-    if cv2.contourArea(contour) < max_pixels:
+    if cv2.contourArea(contour) <= max_pixels:
       cv2.drawContours(img_filled, [contour], 0, 255, -1)
+
   return img_filled
 
 
@@ -35,13 +39,17 @@ def erode(img, kernel_size):
   return cv2.erode(img, kernel, iterations=1)
 
 
-def get_largest_region(img):
-  contours, _ = cv2.findContours(img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-  largest_contour = sorted(contours, key=cv2.contourArea, reverse=True)[0]
-  img_largest_region = np.zeros(img.shape, dtype=np.uint8)
-  cv2.drawContours(img_largest_region, [largest_contour], 0, 255, -1)
-  return img_largest_region
+def get_largest_regions(img, min_area_percent):
+  min_pixels = min_area_percent * img.shape[0] * img.shape[1] / 100
 
+  mask_largest = np.zeros(img.shape, dtype=np.uint8)
+  contours, _ = cv2.findContours(img, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+  for contour in contours:
+    if cv2.contourArea(contour) >= min_pixels:
+      cv2.drawContours(mask_largest, [contour], 0, 255, -1)
+
+  img_largest_regions = cv2.bitwise_and(img, img, mask=mask_largest)
+  return img_largest_regions
 
 def zero_pad_image(img, size, pos):
   if len(img.shape) == 2:
