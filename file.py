@@ -18,7 +18,7 @@ def load_color_backgrounds(dir, extension):
     yield img_rgb
 
 def get_filenames(dir, extension):
-  return [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
+  return sorted([x for x in os.listdir(dir) if x.endswith(f'.{extension}')])
 
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
                                high_energy):
