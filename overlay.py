@@ -112,3 +112,4 @@ def overlay_fgnds_over_bgnd(bgnd, fgnds, fgnd_qty_prob, scale_min, scale_max):
       overlaid, fgnd, scale_min, scale_max)
     bboxes.append(bbox)
   return overlaid, bboxes
+  

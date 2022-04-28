@@ -60,6 +60,7 @@ def get_largest_regions(img, min_area_percent):
   img_largest_regions = cv2.bitwise_and(img, img, mask=mask_largest)
   return img_largest_regions
 
+
 def zero_pad_image(img, size, pos):
   if len(img.shape) == 2:
     img_padded = np.zeros(size, dtype=np.uint8)

@@ -48,4 +48,3 @@ def generate_simulated_images(
     img_filename = bgnd_filenames[index]
     file.save_data(img_filename, extension_out, dir_out, overlaid, bboxes,
                     category)
-          
