@@ -23,7 +23,6 @@ def binarize(img, threshold=None):
     img = rgb_to_gray(img)
   if threshold is None:
     threshold = calculate_optimal_threshold(img)
-    print(threshold)
   return np.where(img < threshold, 255, 0).astype(np.uint8)
 
 
