@@ -1,6 +1,8 @@
 import cv2
+from functools import cache
 import numpy as np
 import os
+import random
 import shutil
 from tqdm import tqdm
 
@@ -18,8 +20,11 @@ def load_color_backgrounds(dir, extension):
     yield img_rgb
 
 
+@cache
 def get_filenames(dir, extension):
-  return sorted([x for x in os.listdir(dir) if x.endswith(f'.{extension}')])
+  filenames = [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
+  random.shuffle(filenames)
+  return filenames
 
 
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
