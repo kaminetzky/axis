@@ -56,19 +56,6 @@ def overlay_color(bgnd, fgnd, pos, alpha=0.9):
   return bgnd_masked + bgnd_fgnd_merged
 
 
-def calculate_threat_threshold(target, mask):
-  region_intensity = calculate_normal_average_intensity(target, mask)
-  threshold = int(round(255 * min(np.exp(region_intensity**5) - 0.5, 0.95)))
-  return threshold
-
-
-def calculate_normal_average_intensity(target, mask):
-  target_masked = cv2.bitwise_and(target, target, mask=mask)
-  target_masked_sum = np.sum(target_masked)
-  mask_sum = np.sum(mask)
-  return target_masked_sum / mask_sum
-
-
 def calculate_bag_mask(img_rgb, bin_thresh=240, max_hole_area_percent=0.15,
                        kernel_size=5, min_region_area_percent=5):
   img = image.rgb_to_gray(img_rgb)
