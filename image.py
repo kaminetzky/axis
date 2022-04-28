@@ -18,7 +18,6 @@ def calculate_optimal_threshold(img):
 
 def binarize(img, threshold=None):
   # If threshold is None, it's calculated automatically
-  # TODO: check if it is worth it to determine the threshold automatically
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
   if threshold is None:
