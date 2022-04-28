@@ -66,7 +66,6 @@ def calculate_bag_mask(img_rgb, bin_thresh=240, max_hole_area_percent=0.15,
 
 
 def generate_insertion_pos(bgnd, fgnd, max_iterations=1000):
-  # TODO: modify code so that bag mask is calculated only once
   bgnd_mask = calculate_bag_mask(bgnd)
   fgnd_size = fgnd.shape[:2]
 
