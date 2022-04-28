@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+import generator
 import image
 
 
@@ -99,3 +100,15 @@ def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
             'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
     return overlaid, bbox
+
+
+def overlay_fgnds_over_bgnd(bgnd, fgnds, fgnd_qty_prob, scale_min, scale_max):
+  overlaid = bgnd.copy()
+
+  fgnd_imgs = generator.sample_images_with_qty_prob(fgnds, fgnd_qty_prob)
+  bboxes = []
+  for fgnd in fgnd_imgs:
+    overlaid, bbox = overlay_color_with_transformation(
+      overlaid, fgnd, scale_min, scale_max)
+    bboxes.append(bbox)
+  return overlaid, bboxes
