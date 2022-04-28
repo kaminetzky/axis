@@ -1,5 +1,4 @@
 import cv2
-from cv2 import IMWRITE_PNG_COMPRESSION
 import numpy as np
 from scipy import ndimage
 
