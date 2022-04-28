@@ -12,13 +12,18 @@ def calculate_optimal_threshold(img):
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
   threshold, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
+  print(threshold)
   return threshold
 
 
-def binarize(img, threshold):
+def binarize(img, threshold=None):
+  # If threshold is None, it's calculated automatically
   # TODO: check if it is worth it to determine the threshold automatically
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
+  if threshold is None:
+    threshold = calculate_optimal_threshold(img)
+    print(threshold)
   return np.where(img < threshold, 255, 0).astype(np.uint8)
 
 

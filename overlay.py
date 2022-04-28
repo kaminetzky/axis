@@ -36,11 +36,9 @@ def overlay_color(bgnd, fgnd, pos, alpha=0.9):
   # source: http://arxiv.org/abs/1909.11508
   # pos is the top left corner
   # TODO: modify code so that bag mask is calculated only once
-  threat_threshold = image.calculate_optimal_threshold(fgnd)
-
   bgnd_size = bgnd.shape[:2]
 
-  fgnd_mask = image.binarize(fgnd, threat_threshold)
+  fgnd_mask = image.binarize(fgnd)
   fgnd_mask_padded = image.zero_pad_image(fgnd_mask, bgnd_size, pos)
   fgnd_mask_padded_inv = 255 - fgnd_mask_padded
 
