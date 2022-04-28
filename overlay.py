@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import random
 
 import image
 
@@ -100,9 +99,3 @@ def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
             'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
     return overlaid, bbox
-
-
-def sample_images_with_qty_prob(imgs, qty_prob):
-  qty = np.random.choice(list(qty_prob.keys()), p=list(qty_prob.values()))
-  sampled_imgs = random.sample(imgs, qty)
-  return sampled_imgs
