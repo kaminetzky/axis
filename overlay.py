@@ -36,9 +36,7 @@ def overlay_color(bgnd, fgnd, pos, alpha=0.9):
   # source: http://arxiv.org/abs/1909.11508
   # pos is the top left corner
   # TODO: modify code so that bag mask is calculated only once
-  bgnd_gray = image.rgb_to_gray(bgnd)
-  bgnd_mask = calculate_bag_mask(bgnd)
-  threat_threshold = calculate_threat_threshold(bgnd_gray, bgnd_mask)
+  threat_threshold = image.calculate_optimal_threshold(fgnd)
 
   bgnd_size = bgnd.shape[:2]
 

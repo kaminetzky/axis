@@ -8,6 +8,13 @@ def rgb_to_gray(img):
   return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
 
+def calculate_optimal_threshold(img):
+  if len(img.shape) == 3:
+    img = rgb_to_gray(img)
+  threshold, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
+  return threshold
+
+
 def binarize(img, threshold):
   # TODO: check if it is worth it to determine the threshold automatically
   if len(img.shape) == 3:
