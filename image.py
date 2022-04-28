@@ -12,7 +12,6 @@ def calculate_optimal_threshold(img):
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
   threshold, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
-  print(threshold)
   return threshold
 
 
