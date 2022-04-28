@@ -17,8 +17,10 @@ def load_color_backgrounds(dir, extension):
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
     yield img_rgb
 
+
 def get_filenames(dir, extension):
   return sorted([x for x in os.listdir(dir) if x.endswith(f'.{extension}')])
+
 
 def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
                                high_energy):
@@ -49,6 +51,6 @@ def delete_and_create_yolo_dirs(data_dir):
 
 
 def delete_and_create_dir(path):
-    if os.path.exists(path):
-        shutil.rmtree(path)
-    os.makedirs(path)
+  if os.path.exists(path):
+      shutil.rmtree(path)
+  os.makedirs(path)
