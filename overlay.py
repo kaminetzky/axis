@@ -32,10 +32,9 @@ def overlay_grayscale(bgnd, fgnd, pos, b=0, c=255):
   return result
 
 
-def overlay_color(bgnd, fgnd, pos, alpha=0.9):
+def overlay_color_weighed_sum(bgnd, fgnd, pos, alpha=0.9):
   # source: http://arxiv.org/abs/1909.11508
   # pos is the top left corner
-  # TODO: modify code so that bag mask is calculated only once
   bgnd_size = bgnd.shape[:2]
 
   fgnd_mask = image.binarize(fgnd)
@@ -50,6 +49,46 @@ def overlay_color(bgnd, fgnd, pos, alpha=0.9):
 
   bgnd_fgnd_merged = (alpha * fgnd_padded_masked
                   + (1 - alpha) * bgnd_masked_inv).astype(np.uint8)
+
+  return bgnd_masked + bgnd_fgnd_merged
+
+
+def overlay_color(bgnd, fgnd, pos):
+  # TODO improve this function's variable names
+  bgnd_size = bgnd.shape[:2]
+
+  fgnd_mask = image.binarize(fgnd)
+  fgnd_mask_padded = image.zero_pad_image(fgnd_mask, bgnd_size, pos)
+  fgnd_mask_padded_inv = 255 - fgnd_mask_padded
+
+  fgnd_padded = image.zero_pad_image(fgnd, bgnd_size, pos)
+  fgnd_padded_masked = cv2.bitwise_and(fgnd_padded, fgnd_padded,
+                                       mask=fgnd_mask_padded)
+
+  bgnd_masked = cv2.bitwise_and(bgnd, bgnd, mask=fgnd_mask_padded_inv)
+  bgnd_masked_inv = cv2.bitwise_and(bgnd, bgnd, mask=fgnd_mask_padded)
+
+  fgnd_padded_masked = fgnd_padded_masked.astype(np.float32) / 255
+  bgnd_masked_inv = bgnd_masked_inv.astype(np.float32) / 255
+
+  fgnd_padded_masked_hsv = cv2.cvtColor(fgnd_padded_masked, cv2.COLOR_RGB2HSV)
+  bgnd_masked_inv_hsv = cv2.cvtColor(bgnd_masked_inv, cv2.COLOR_RGB2HSV)
+
+  bgnd_fgnd_merged_hue = np.maximum(fgnd_padded_masked_hsv[:, :, 0],
+                                bgnd_masked_inv_hsv[:, :, 0])
+
+  bgnd_fgnd_merged_sat = (
+    fgnd_padded_masked_hsv[:, :, 1] + bgnd_masked_inv_hsv[:, :, 1]
+    - fgnd_padded_masked_hsv[:, :, 1] * bgnd_masked_inv_hsv[:, :, 1])
+
+  bgnd_fgnd_merged_val = (fgnd_padded_masked_hsv[:, :, 2]
+                          * bgnd_masked_inv_hsv[:, :, 2])
+
+  bgnd_fgnd_merged = cv2.cvtColor(np.dstack(
+    (bgnd_fgnd_merged_hue, bgnd_fgnd_merged_sat, bgnd_fgnd_merged_val)),
+     cv2.COLOR_HSV2RGB)
+
+  bgnd_fgnd_merged = (255 * bgnd_fgnd_merged).astype(np.uint8)
 
   return bgnd_masked + bgnd_fgnd_merged
 
