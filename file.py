@@ -58,7 +58,7 @@ def delete_and_create_yolo_dirs(data_dir):
 
 def delete_and_create_dir(path):
   if os.path.exists(path):
-      shutil.rmtree(path)
+    shutil.rmtree(path)
   os.makedirs(path)
 
 
@@ -74,14 +74,14 @@ def save_data(filename_with_extension, img_extension, dir_output, img,
 
     bbox_text = ''
     for bbox in bounding_boxes:
-        obj_cat = 0
-        center_y = bbox['pos_y'] + bbox['size_y'] / 2
-        center_x = bbox['pos_x'] + bbox['size_x'] / 2
-        center_y_rel = center_y / img.shape[0]
-        center_x_rel = center_x / img.shape[1]
-        size_y_rel = bbox['size_y'] / img.shape[0]
-        size_x_rel = bbox['size_x'] / img.shape[1]
-        bbox_text += (f'{obj_cat} {center_x_rel} {center_y_rel} {size_x_rel} '
-                      f'{size_y_rel}\n')
+      obj_cat = 0
+      center_y = bbox['pos_y'] + bbox['size_y'] / 2
+      center_x = bbox['pos_x'] + bbox['size_x'] / 2
+      center_y_rel = center_y / img.shape[0]
+      center_x_rel = center_x / img.shape[1]
+      size_y_rel = bbox['size_y'] / img.shape[0]
+      size_x_rel = bbox['size_x'] / img.shape[1]
+      bbox_text += (f'{obj_cat} {center_x_rel} {center_y_rel} {size_x_rel} '
+                    f'{size_y_rel}\n')
     with open(bbox_path, 'w') as file:
-        file.write(bbox_text)
+      file.write(bbox_text)
