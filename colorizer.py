@@ -55,7 +55,8 @@ class Colorizer:
     # the real ratios corresponding to this instance's energies
     self._ratios = value
 
-  def colorize(self, img_low, img_high):
+  def colorize(self, img_low, img_high, organic_hue=30, inorganic_hue=120,
+               metal_hue=210):
     img_color = np.zeros((*img_low.shape, 3), dtype=np.float32)
 
     for j in range(img_color.shape[0]):
@@ -89,13 +90,13 @@ class Colorizer:
             val = 1
           elif ratio < self.ratios[0]:
             # Organic
-            hue = 30 # Orange
+            hue = organic_hue # Orange
           elif ratio < self.ratios[1]:
             # Inorganic
-            hue = 120 # Green
+            hue = inorganic_hue # Green
           else:
-            # Metals
-            hue = 220 # Blue
+            # Metal
+            hue = metal_hue # Blue
           value = (hue, sat, val)
 
         img_color[j, i] = value
