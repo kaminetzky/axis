@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 from scipy import ndimage
 
 
@@ -110,6 +111,13 @@ def rotate_random(img):
   img_rot = ndimage.rotate(img, np.random.randint(0, 359), order=1,
                            reshape=True, mode='constant', cval=255)
   return img_rot
+
+
+def mirror_random(img):
+  # 50% chance of mirroring
+  if random.randint(0, 1):
+    img = cv2.flip(img, 1)
+  return img
 
 
 def crop_white_borders(img, threshold=250, offset=2):
