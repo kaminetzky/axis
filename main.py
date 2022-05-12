@@ -1,30 +1,25 @@
-import os
-from tqdm import tqdm
-
-import file
 import generator
-import overlay
 
 
-DIR_BGND = 'img/color/bags'
+DIR_BGND = 'data/input/data-wrench-real/images/train'
 EXTENSION_BGND = 'jpg'
 
-DIR_FGND_LOW = 'img/dual/wrench/wrench-50'
-DIR_FGND_HIGH = 'img/dual/wrench/wrench-150'
+DIR_FGND_LOW = 'data/input/tests/dual/wrench/wrench-50'
+DIR_FGND_HIGH = 'data/input/tests/dual/wrench/wrench-150'
 EXTENSION_FGND = 'tiff'
 
-DIR_OUT = 'data'
+DIR_OUT = 'data/output/data-wrench-tests'
 EXTENSION_OUT = 'png'
 
 LOW_ENERGY = 50
 HIGH_ENERGY = 150
 
-SCALE_MIN = 0.1
-SCALE_MAX = 0.2
+SCALE_MIN = 0.3
+SCALE_MAX = 0.6 
 
 FGND_QTY_PROB = {0: 0.1, 1: 0.5, 2: 0.3, 3: 0.1}
 
-TRAIN_VAL_RATIO = {'train': 0.8, 'valid': 0.1}
+TRAIN_VAL_RATIO = {'train': 0.9, 'valid': 0.1}
 
 
 if __name__ == '__main__':
