@@ -11,6 +11,7 @@ from colorizer import Colorizer
 
 
 def load_color_backgrounds(dir, extension):
+  # Images are returned inside of a generator in order to avoid memory issues
   # TODO: make sure images are returned as float32 between 0 and 1
 
   filenames = get_filenames(dir, extension)
