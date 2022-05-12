@@ -95,6 +95,7 @@ def overlay_color(bgnd, fgnd, pos):
 
 def calculate_bag_mask(img_rgb, bin_thresh=240, max_hole_area_percent=0.15,
                        kernel_size=5, min_region_area_percent=5):
+  # TODO: Calculate the optimal threshold for finding the background
   img = image.rgb_to_gray(img_rgb)
   img = image.binarize(img, bin_thresh)
   img = image.dilate(img, kernel_size)
@@ -114,7 +115,7 @@ def generate_insertion_pos(bgnd, fgnd, max_iterations=1000):
     if is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
       return pos
 
-  raise RuntimeError('Couldn\'t find an insertion position')
+  print('Couldn\'t find an insertion position')
 
 
 def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
@@ -134,7 +135,11 @@ def scale_rotate_crop_fgnd(img, bgnd, ratio_min, ratio_max):
 
 def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     fgnd = scale_rotate_crop_fgnd(fgnd, bgnd, scale_min, scale_max)
+
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
+    if insertion_pos is None:
+      return bgnd, None
+
     overlaid = overlay_color(bgnd, fgnd, insertion_pos)
     bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
             'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
@@ -149,6 +154,7 @@ def overlay_fgnds_over_bgnd(bgnd, fgnds, fgnd_qty_prob, scale_min, scale_max):
   for fgnd in fgnd_imgs:
     overlaid, bbox = overlay_color_with_transformation(
       overlaid, fgnd, scale_min, scale_max)
-    bboxes.append(bbox)
+    if bbox:
+      bboxes.append(bbox)
   return overlaid, bboxes
   
