@@ -126,11 +126,12 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   return all_zeros
 
 
-def transform_fgnd(img, bgnd, ratio_min, ratio_max):
-  img = image.scale_relative(img, bgnd, ratio_min, ratio_max)
-  img = image.rotate_random(img)
-  img = image.crop_white_borders(img)
-  return img
+def transform_fgnd(fgnd, bgnd, ratio_min, ratio_max):
+  fgnd = image.scale_relative(fgnd, bgnd, ratio_min, ratio_max)
+  fgnd = image.rotate_random(fgnd)
+  fgnd = image.mirror_random(fgnd)
+  fgnd = image.crop_white_borders(fgnd)
+  return fgnd
 
 
 def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
