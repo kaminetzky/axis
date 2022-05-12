@@ -3,4 +3,5 @@ __pycache__/
 venv/
 img/
 data/
+misc/
 tests.py
