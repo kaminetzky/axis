@@ -126,7 +126,7 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   return all_zeros
 
 
-def scale_rotate_crop_fgnd(img, bgnd, ratio_min, ratio_max):
+def transform_fgnd(img, bgnd, ratio_min, ratio_max):
   img = image.scale_relative(img, bgnd, ratio_min, ratio_max)
   img = image.rotate_random(img)
   img = image.crop_white_borders(img)
@@ -134,7 +134,7 @@ def scale_rotate_crop_fgnd(img, bgnd, ratio_min, ratio_max):
 
 
 def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
-    fgnd = scale_rotate_crop_fgnd(fgnd, bgnd, scale_min, scale_max)
+    fgnd = transform_fgnd(fgnd, bgnd, scale_min, scale_max)
 
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
     if insertion_pos is None:
