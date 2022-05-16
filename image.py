@@ -123,10 +123,10 @@ def mirror_random(img):
 def crop_white_borders(img, threshold=250, offset=2):
   dark_coords = np.where(img < threshold)
 
-  y_start = np.min(dark_coords[0]) - offset
-  y_end = np.max(dark_coords[0]) + offset
-  x_start = np.min(dark_coords[1]) - offset
-  x_end = np.max(dark_coords[1]) + offset
+  y_start = max(np.min(dark_coords[0]) - offset, 0)
+  y_end = min(np.max(dark_coords[0]) + offset, img.shape[0])
+  x_start = max(np.min(dark_coords[1]) - offset, 0)
+  x_end = min(np.max(dark_coords[1]) + offset, img.shape[1])
 
   img_cropped = img[y_start:y_end, x_start:x_end]
   return img_cropped
