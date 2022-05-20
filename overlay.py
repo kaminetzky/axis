@@ -138,7 +138,7 @@ def transform_fgnd_relative(fgnd, bgnd, ratio_min, ratio_max):
   fgnd = image.crop_white_borders(fgnd)
   return fgnd
 
-def transform_fgnd(fgnd, bgnd, scale):
+def transform_fgnd(fgnd, scale):
   fgnd = image.scale_img(fgnd, scale)
   fgnd = image.rotate_random(fgnd)
   fgnd = image.mirror_random(fgnd)
@@ -154,7 +154,7 @@ def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
     if insertion_pos:
       break
-    fgnd = image.scale_img(fgnd, 0.9)
+    fgnd = transform_fgnd(fgnd, 0.9)
     
   if insertion_pos is None:
     print('Couldn\'t find an insertion position')
