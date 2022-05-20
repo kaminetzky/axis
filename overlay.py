@@ -97,7 +97,6 @@ def overlay_color(bgnd, fgnd, pos):
 
 def calculate_bag_mask(img_rgb, max_hole_area_percent=0.15,
                        kernel_size=5, min_region_area_percent=5):
-  # TODO: Calculate the optimal threshold for finding the background
   img = image.rgb_to_gray(img_rgb)
   bin_thresh = image.calculate_mode_threshold(img)
   img = image.binarize(img, bin_thresh)
@@ -113,12 +112,15 @@ def generate_insertion_pos(bgnd, fgnd, max_iterations=1000):
   fgnd_size = fgnd.shape[:2]
 
   for _ in range(max_iterations):
+    if (bgnd_mask.shape[0] < fgnd_size[0]
+        or bgnd_mask.shape[1] < fgnd_size[1]):
+      print('Foreground is larger than background')
+      return
+
     pos = (np.random.randint(0, bgnd_mask.shape[0] - fgnd_size[0]),
            np.random.randint(0, bgnd_mask.shape[1] - fgnd_size[1]))
     if is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
       return pos
-
-  print('Couldn\'t find an insertion position')
 
 
 def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
@@ -129,8 +131,15 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   return all_zeros
 
 
-def transform_fgnd(fgnd, bgnd, ratio_min, ratio_max):
+def transform_fgnd_relative(fgnd, bgnd, ratio_min, ratio_max):
   fgnd = image.scale_relative(fgnd, bgnd, ratio_min, ratio_max)
+  fgnd = image.rotate_random(fgnd)
+  fgnd = image.mirror_random(fgnd)
+  fgnd = image.crop_white_borders(fgnd)
+  return fgnd
+
+def transform_fgnd(fgnd, bgnd, scale):
+  fgnd = image.scale_img(fgnd, scale)
   fgnd = image.rotate_random(fgnd)
   fgnd = image.mirror_random(fgnd)
   fgnd = image.crop_white_borders(fgnd)
@@ -138,16 +147,23 @@ def transform_fgnd(fgnd, bgnd, ratio_min, ratio_max):
 
 
 def overlay_color_with_transformation(bgnd, fgnd, scale_min, scale_max):
-    fgnd = transform_fgnd(fgnd, bgnd, scale_min, scale_max)
+   # TODO: add image scale and number of attempts as a function parameter
+  fgnd = transform_fgnd_relative(fgnd, bgnd, scale_min, scale_max)
 
+  for _ in range(5):
     insertion_pos = generate_insertion_pos(bgnd, fgnd)
-    if insertion_pos is None:
-      return bgnd, None
+    if insertion_pos:
+      break
+    fgnd = image.scale_img(fgnd, 0.9)
+    
+  if insertion_pos is None:
+    print('Couldn\'t find an insertion position')
+    return bgnd, None
 
-    overlaid = overlay_color(bgnd, fgnd, insertion_pos)
-    bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
-            'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
-    return overlaid, bbox
+  overlaid = overlay_color(bgnd, fgnd, insertion_pos)
+  bbox = {'pos_y': insertion_pos[0], 'pos_x': insertion_pos[1],
+          'size_y': fgnd.shape[0], 'size_x': fgnd.shape[1]}
+  return overlaid, bbox
 
 
 def overlay_fgnds_over_bgnd(bgnd, fgnds, fgnd_qty_prob, scale_min, scale_max):
