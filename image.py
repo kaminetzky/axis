@@ -15,12 +15,16 @@ def calculate_optimal_threshold(img):
   return threshold
 
 
-def binarize(img, threshold=None):
-  # If threshold is None, it's calculated automatically
+def calculate_mode_threshold(img, offset=-0):
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
-  if threshold is None:
-    threshold = calculate_optimal_threshold(img)
+  mode = np.bincount(img.ravel()).argmax()
+  return mode + offset
+
+
+def binarize(img, threshold):
+  if len(img.shape) == 3:
+    img = rgb_to_gray(img)
   return np.where(img < threshold, 255, 0).astype(np.uint8)
 
 

@@ -37,7 +37,8 @@ def overlay_color_weighed_sum(bgnd, fgnd, pos, alpha=0.9):
   # pos is the top left corner
   bgnd_size = bgnd.shape[:2]
 
-  fgnd_mask = image.binarize(fgnd)
+  fgnd_threshold = image.calculate_optimal_threshold(fgnd)
+  fgnd_mask = image.binarize(fgnd, fgnd_threshold)
   fgnd_mask_padded = image.zero_pad_image(fgnd_mask, bgnd_size, pos)
   fgnd_mask_padded_inv = 255 - fgnd_mask_padded
 
@@ -57,7 +58,8 @@ def overlay_color(bgnd, fgnd, pos):
   # TODO improve this function's variable names
   bgnd_size = bgnd.shape[:2]
 
-  fgnd_mask = image.binarize(fgnd)
+  fgnd_threshold = image.calculate_optimal_threshold(fgnd)
+  fgnd_mask = image.binarize(fgnd, fgnd_threshold)
   fgnd_mask_padded = image.zero_pad_image(fgnd_mask, bgnd_size, pos)
   fgnd_mask_padded_inv = 255 - fgnd_mask_padded
 
@@ -93,10 +95,11 @@ def overlay_color(bgnd, fgnd, pos):
   return bgnd_masked + bgnd_fgnd_merged
 
 
-def calculate_bag_mask(img_rgb, bin_thresh=240, max_hole_area_percent=0.15,
+def calculate_bag_mask(img_rgb, max_hole_area_percent=0.15,
                        kernel_size=5, min_region_area_percent=5):
   # TODO: Calculate the optimal threshold for finding the background
   img = image.rgb_to_gray(img_rgb)
+  bin_thresh = image.calculate_mode_threshold(img)
   img = image.binarize(img, bin_thresh)
   img = image.dilate(img, kernel_size)
   img = image.fill_holes(img, max_hole_area_percent)
