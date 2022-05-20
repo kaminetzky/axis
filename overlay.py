@@ -131,8 +131,8 @@ def is_valid_insertion_position(bgnd_mask, fgnd_size, pos):
   return all_zeros
 
 
-def transform_fgnd_relative(fgnd, bgnd, ratio_min, ratio_max):
-  fgnd = image.scale_relative(fgnd, bgnd, ratio_min, ratio_max)
+def transform_fgnd_relative(fgnd, bgnd, scale_min, scale_max):
+  fgnd = image.scale_relative(fgnd, bgnd, scale_min, scale_max)
   fgnd = image.rotate_random(fgnd)
   fgnd = image.mirror_random(fgnd)
   fgnd = image.crop_white_borders(fgnd)
