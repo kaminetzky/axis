@@ -55,7 +55,8 @@ def overlay_color_weighed_sum(bgnd, fgnd, pos, alpha=0.9):
 
 
 def overlay_color(bgnd, fgnd, pos):
-  # TODO improve this function's variable names
+  # TODO: improve this function's variable names
+  # TODO: improve hue calculation
   bgnd_size = bgnd.shape[:2]
 
   fgnd_threshold = image.calculate_optimal_threshold(fgnd)
@@ -76,8 +77,8 @@ def overlay_color(bgnd, fgnd, pos):
   fgnd_padded_masked_hsv = cv2.cvtColor(fgnd_padded_masked, cv2.COLOR_RGB2HSV)
   bgnd_masked_inv_hsv = cv2.cvtColor(bgnd_masked_inv, cv2.COLOR_RGB2HSV)
 
-  bgnd_fgnd_merged_hue = np.maximum(fgnd_padded_masked_hsv[:, :, 0],
-                                bgnd_masked_inv_hsv[:, :, 0])
+  bgnd_fgnd_merged_hue = np.maximum(fgnd_padded_masked_hsv[:, :, 0] % 260,
+                                bgnd_masked_inv_hsv[:, :, 0] % 260)
 
   bgnd_fgnd_merged_sat = (
     fgnd_padded_masked_hsv[:, :, 1] + bgnd_masked_inv_hsv[:, :, 1]
