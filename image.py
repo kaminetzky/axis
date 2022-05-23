@@ -15,7 +15,7 @@ def calculate_optimal_threshold(img):
   return threshold
 
 
-def calculate_mode_threshold(img, offset=-0):
+def calculate_mode_threshold(img, offset=-10):
   if len(img.shape) == 3:
     img = rgb_to_gray(img)
   mode = np.bincount(img.ravel()).argmax()
