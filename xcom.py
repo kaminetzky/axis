@@ -1,10 +1,5 @@
 from functools import cache
-import json
-import matplotlib.pyplot as plt
-import numpy as np
 import requests
-from tqdm import tqdm
-from urllib import response
 
 
 def parse_attenuation_table(attenuations_text):
