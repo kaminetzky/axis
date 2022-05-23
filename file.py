@@ -24,6 +24,8 @@ def load_color_backgrounds(dir, extension):
 
 @cache
 def get_filenames(dir, extension):
+  # This function is cached so that the order of the returned list is always
+  # the same
   filenames = [x for x in os.listdir(dir) if x.endswith(f'.{extension}')]
   random.shuffle(filenames)
   return filenames
