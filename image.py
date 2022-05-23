@@ -96,6 +96,7 @@ def crop_overflowing_image(img, size, pos):
   
   return img, size, pos
 
+
 def scale_img(img, scale):
   height = int(img.shape[0] * scale)
   width = int(img.shape[1] * scale)
