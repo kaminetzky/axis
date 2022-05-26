@@ -61,6 +61,8 @@ def get_transition_ratios(low_energy, high_energy, inorganic_start=11,
   # inorganic_start and metal_start declare the effective atomic number of
   # the first element that corresponds to that category. The threshold will be
   # (ratio(category_start) + ratio(categry_start - 1)) / 2.
+  # TODO: evaluate if the start/end values should be the same
+  # TODO: evaluate if I should rename ratios to Q-values
 
   atomic_numbers = {'organic end': inorganic_start - 1,
                     'inorganic start': inorganic_start,
