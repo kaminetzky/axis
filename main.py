@@ -4,27 +4,27 @@ import random
 import generator
 
 
-DIR_BGND = '/Users/ak/Documents/University/Masters/Research/Data/datasets/SIXray/SIXrayN10'
+DIR_BGND = '/Users/ak/Documents/University/Masters/Research/Data/images/yolo-data/data-wrench-split/images/no-wrenches'
 EXTENSION_BGND = 'jpg'
 
-DIR_FGND_LOW = 'data/input/wrench-experiments2-flat/dual/wrench-100-test'
-DIR_FGND_HIGH = 'data/input/wrench-experiments2-flat/dual/wrench-150-test'
+DIR_FGND_LOW = '/Users/ak/Documents/University/Masters/Research/Data/images/input/img/xray-artist/wrench-experiments2-full/dual/wrench-100'
+DIR_FGND_HIGH = '/Users/ak/Documents/University/Masters/Research/Data/images/input/img/xray-artist/wrench-experiments2-full/dual/wrench-150'
 EXTENSION_FGND = 'tiff'
 
-DIR_OUT = 'data/output/wrench-sim-only-test'
+DIR_OUT = '/Users/ak/Documents/University/Masters/Research/Data/images/yolo-data/data-wrench-sim5/'
 EXTENSION_OUT = 'jpg'
 
 LOW_ENERGY = 100
 HIGH_ENERGY = 150
 
 SCALE_MIN = 0.3
-SCALE_MAX = 0.6
+SCALE_MAX = 0.5
 
 FGND_QTY_PROB = {0: 0.1, 1: 0.5, 2: 0.3, 3: 0.1}
 
 TRAIN_VAL_RATIO = {'train': 0.9, 'valid': 0.1}
 
-RANDOM_SEED = 0
+RANDOM_SEED = 1
 
 
 if __name__ == '__main__':

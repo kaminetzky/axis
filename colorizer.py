@@ -56,7 +56,7 @@ class Colorizer:
     self._ratios = value
 
   def colorize(self, img_low, img_high, organic_hue=30, inorganic_hue=120,
-               metal_hue=210):
+               metal_hue=205):
     img_color = np.zeros((*img_low.shape, 3), dtype=np.float32)
 
     for j in range(img_color.shape[0]):
