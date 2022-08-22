@@ -48,6 +48,9 @@ def load_colorized_foregrounds(dir_low, dir_high, extension, low_energy,
 
     colorizer = Colorizer(low_energy, high_energy)
     img_color = colorizer.colorize(img_low, img_high)
+
+    img_color = colorizer.add_spots(img_color)
+    img_color = colorizer.add_hue_variations(img_color)
     imgs.append((img_color * 255).astype(np.uint8))
 
   return imgs
